@@ -1,4 +1,5 @@
 using blogAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<BlogItemService>();
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<UserService>();
+
+var connectionString = builder.Configuration.GetConnectionString("myBlogString2");
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
