@@ -13,10 +13,10 @@ Create a backend for Blog Application:
 
 ## Stack (meaning what particular framework)
 // What stack is your software built in!
-    - Back end will be .Net 9, ASP.net core, EF Core, SQL Server    
-    (Ef core to talk to our database) (ASP.net core)
+    - Back end will be .Net 9, ASP.net core, EF Core, SQL Server
+    (Ef core to talk to our database with sql) (ASP.net core): Create a web based API endpoints for front-end to talk to endpoint (works on cloud and web)
+    ASP.net core is the latest version!
     - Front End will be done in Next JS with Typescript (To be done by jacob.) Flowbite(Tailwind!) TBA (Vercel or Azure)!
-
 
 ## Application Features
 
