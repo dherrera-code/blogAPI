@@ -14,7 +14,7 @@ namespace blogAPI.Models
         public string? Image { get; set; }
         public string? Description { get; set; }
         //* For date's create a dateTime object to hold the date!
-        public string? Date { get; set; }
+        public DateTime Date { get; set; }
         public string? Category { get; set; }
         public string? Tags { get; set; }
         public bool IsPublished { get; set; }
