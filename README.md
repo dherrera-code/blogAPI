@@ -113,17 +113,19 @@ bool IsDeleted
 ### We need a way to sign in with our username and password
 
 ```csharp
-
-### LoginModel
+(Data transfer Object)
+### LoginModelDTO
 
     string Username
     string Password
-### CreateAccountModel
+
+### CreateAccountModelDTO
+
     int Id = 0;
     string Username
     string Password
 
-### PasswordModel
+### PasswordModelDTO
 
     string Salt;
     string Hash;
