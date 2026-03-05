@@ -114,6 +114,8 @@ bool IsDeleted
 
 ```csharp
 (Data transfer Object)
+## DTO's 
+
 ### LoginModelDTO
 
     string Username
@@ -129,6 +131,10 @@ bool IsDeleted
 
     string Salt;
     string Hash;
+
+### UserIdDTO
+    int UserId;
+    string PublisherName;
 
 ```
 Services Folder with DBContext and Services

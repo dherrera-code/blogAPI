@@ -27,5 +27,26 @@ namespace blogAPI.Controllers
             return _userData.AddUser(userToAdd);
         }
 
+        //getall Users, getUserById.
+        [HttpGet("GetAllUsers")]
+        public IEnumerable<UserModel> GetAllUsers()
+        {
+            return _userData.GetAllUsers();
+        }
+
+        [HttpGet("GetUserByUsername")]
+        public UserIdDTO GetUserIdDTOUsername(string username)
+        {
+            return _userData.GetUserIdDTOByUsername(username);
+        }
+
+        //Login Method endpoint
+        [HttpPost("Login")]
+        // IACtionREsult returns methods like okay! 
+        public IActionResult Login([FromBody] LoginDTO user)
+        {
+            return _userData.Login(user);
+        }
+
     }
 }

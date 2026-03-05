@@ -1,17 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using blogAPI.Models;
 using blogAPI.Models.DTO;
 using blogAPI.Services.Context;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace blogAPI.Services
 {
         //now we want to inherit from our DBcontext
-    public class UserService
+    public class UserService : ControllerBase
     {
         private readonly DataContext _context;
         //gives us access to our database!!
@@ -34,6 +40,7 @@ namespace blogAPI.Services
         public bool AddUser(CreateAccountDTO userToAdd)
         {
             bool result = false;
+
             if(userToAdd.Username != null && !DoesUserExist(userToAdd.Username)) {
                 UserModel newUser = new UserModel();
 
@@ -60,10 +67,7 @@ namespace blogAPI.Services
             // return a bool to return true or false;
         }
 
-
         //Function that will help hash our password
-
-
         public PasswordDTO HashPassword(string? password)
         {
             PasswordDTO newHashedPassword = new PasswordDTO();
@@ -74,7 +78,7 @@ namespace blogAPI.Services
             provider.GetNonZeroBytes(SaltBytes); 
 
             var Salt = Convert.ToBase64String(SaltBytes);
-            //create a hash versed argument
+            //create a hash versed argument: Created our salt string!
             var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password ?? "", SaltBytes, 10000,HashAlgorithmName.SHA256);
                                                                         //The higher the bytes the better the encryption!
             var Hash = Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(256));
@@ -104,5 +108,45 @@ namespace blogAPI.Services
 
         }
 
+        public IEnumerable<UserModel> GetAllUsers()
+        {
+            return _context.UserInfo;
+        }
+// what is the internal! mean!
+        public IActionResult Login(LoginDTO user)
+        {
+            //Check if the user exist! 
+            IActionResult result = Unauthorized();
+            if (DoesUserExist(user.Username))
+            {
+                //create a secret key used to sign the JWT Token
+                //This key should be stored securely (not hard coded in production) //Once we hit our 256 range for our passed string we are good
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersupersuperduppersecurekey@34456789"));
+                //Create signing credentials using the secretkey and an algorithm: HMACSHA256
+                var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256); //This ensures the token can't be tampered with
+
+                //Build the JWT toke with metadata
+                var tokeOptions = new JwtSecurityToken(
+                    issuer: "https://localhost:5001",
+                    audience: "https://localhost:5001",
+                    claims: new List<Claim>(), 
+                    expires: DateTime.Now.AddMinutes(5),
+                    signingCredentials: signingCredentials
+                );
+
+                //Convert the token object into string that can be sent to the client!
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
+
+                //return the token as JSON to the client
+                result = Ok(new {Token = tokenString});
+            }
+            //return either the token (if user exist) or unauthorized (if user does not exist)!
+            return result;
+        }
+
+        internal UserIdDTO GetUserIdDTOByUsername(string username)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
