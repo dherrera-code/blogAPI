@@ -148,5 +148,42 @@ namespace blogAPI.Services
         {
             throw new NotImplementedException();
         }
+
+        //Helper function to help us find a user!
+        public UserModel GetUserByUsername(string username)
+        {
+            return _context.UserInfo.SingleOrDefault(user => user.Username == username);
+        }
+
+        public bool DeleteUser(string userToDelete)
+        {
+            UserModel foundUser = GetUserByUsername(userToDelete);
+            bool result = false;
+            if(foundUser != null)
+            {
+                foundUser.Username = userToDelete;
+                _context.Remove(foundUser);
+                result = _context.SaveChanges() != 0; // means it saves to database
+            }
+            return result;
+        }
+
+
+        public UserModel GetUserById(int id)
+        {
+            return _context.UserInfo.SingleOrDefault(Id => Id.Id == id);
+        }
+        public bool UpdateUser(int id, string username)
+        {
+            UserModel foundUser = GetUserById(id);
+            bool result = false;
+            if(foundUser != null)
+            {
+                foundUser.Username = username;
+                _context.Update(foundUser);
+                result = _context.SaveChanges() != 0;
+            }
+            return result;
+        }
     }
 }

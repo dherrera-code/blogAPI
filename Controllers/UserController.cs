@@ -48,5 +48,19 @@ namespace blogAPI.Controllers
             return _userData.Login(user);
         }
 
+        [HttpPost("DeleteUser/{userToDelete}")]
+        public bool DeleteUser(string userToDelete)
+        {
+            return _userData.DeleteUser(userToDelete);
+        }
+
+        //Update User 
+        [HttpPut("UpdateUser")]
+        public bool UpdateUser(int id, string username)
+        {
+            return _userData.UpdateUser(id, username);
+        }
+
+
     }
 }
