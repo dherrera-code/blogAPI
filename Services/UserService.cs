@@ -113,12 +113,22 @@ namespace blogAPI.Services
             return _context.UserInfo;
         }
 // what is the internal! mean!
+
+        //GetAllUsersDataByUsername
+        public UserModel GetAllUserDataByUsername(string username)
+        {
+            return _context.UserInfo.FirstOrDefault(user => user.Username == username);
+        }
         public IActionResult Login(LoginDTO user)
         {
             //Check if the user exist! 
             IActionResult result = Unauthorized();
+
             if (DoesUserExist(user.Username))
             {
+                UserModel foundUser = GetAllUserDataByUsername(user.Username);
+                if(VerifyUserPassword(user.Password, foundUser.Hash, foundUser.Salt))
+                {
                 //create a secret key used to sign the JWT Token
                 //This key should be stored securely (not hard coded in production) //Once we hit our 256 range for our passed string we are good
                 var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("supersupersuperduppersecurekey@34456789"));
@@ -139,6 +149,7 @@ namespace blogAPI.Services
 
                 //return the token as JSON to the client
                 result = Ok(new {Token = tokenString});
+                }
             }
             //return either the token (if user exist) or unauthorized (if user does not exist)!
             return result;

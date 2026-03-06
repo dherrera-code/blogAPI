@@ -63,6 +63,13 @@ namespace blogAPI.Controllers
         {
             return _data.DeleteBlogItem(blogItemToDelete);
         }
-        
+
+        //GetPublishedBlogItems
+        [HttpGet("GetPublishedItems")]
+        public IEnumerable<BlogItemModel> GetPublishedItems()
+        {
+            return _data.GetPublishedItems();
+        }
+        //Get
     }
 }
